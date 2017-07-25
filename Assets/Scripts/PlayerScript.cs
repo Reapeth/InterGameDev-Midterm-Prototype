@@ -3,42 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
+	bool fistDown;
 	bool smash;
-	// Use this for initialization
 	void Start () {
+		fistDown = false;
 		smash = false;
 	}
-	
-	// Update is called once per frame
 	void Update () {
-		//transform.position = new Vector3(Input.mousePosition.x * 0.15f , 15f, Input.mousePosition.z * 0.15f);
-		//transform.position = new Vector3(Input.GetAxis("Mouse X"), 15f, Input.GetAxis("Mouse Y"));
-		if (Input.GetKey (KeyCode.UpArrow)) {
-			transform.position += new Vector3 (0f, 0f, 5f) * Time.deltaTime;
+		if (smash == false) {
+			if (Input.GetKey (KeyCode.UpArrow)) {
+				transform.position += new Vector3 (0f, 0f, 15f) * Time.deltaTime;
+			}
+			if (Input.GetKey (KeyCode.DownArrow)) {
+				transform.position += new Vector3 (0f, 0f, -15f) * Time.deltaTime;
+			}
+			if (Input.GetKey (KeyCode.LeftArrow)) {
+				transform.position += new Vector3 (-15f, 0f, 0f) * Time.deltaTime;
+			}
+			if (Input.GetKey (KeyCode.RightArrow)) {
+				transform.position += new Vector3 (15f, 0f, 0f) * Time.deltaTime;
+			}
 		}
-		if (Input.GetKey (KeyCode.DownArrow)) {
-			transform.position += new Vector3 (0f, 0f, -5f) * Time.deltaTime;
-		}
-		if (Input.GetKey (KeyCode.LeftArrow)) {
-			transform.position += new Vector3 (-5f, 0f, 0f) * Time.deltaTime;
-		}
-		if (Input.GetKey (KeyCode.RightArrow)) {
-			transform.position += new Vector3 (5f, 0f, 0f) * Time.deltaTime;
-		}
-		if (Input.GetKeyDown (KeyCode.Space)) {
+		if (Input.GetKeyDown (KeyCode.Space) && transform.position.y >= 15) {
+			fistDown = true;
 			smash = true;
 		}
 		if (transform.position.y <= 2) {
-			smash = false;
+			GetComponent<AudioSource> ().Play ();
+			fistDown = false;
 		}
-		if (smash == true) {
+		if (fistDown == true) {
 			if (transform.position.y > 2) {
 				transform.position += new Vector3 (0f, -50f, 0f) * Time.deltaTime;
 			}
-		} else if (smash == false) {
-			if (transform.position.y < 20) {
+		} else if (fistDown == false) {
+			if (transform.position.y < 15) {
 				transform.position += new Vector3 (0f, 50f, 0f) * Time.deltaTime;
 			}
+		}
+		if (transform.position.y >= 15) {
+			smash = false;
 		}
 	}
 }
